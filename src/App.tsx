@@ -1,9 +1,9 @@
 import { useReducer } from 'react'
 import './App.css'
-import { cartReducer } from './cart/carReducer'
+import { cartReducer } from './cart/cartReducer'
 
 function App() {
-  const [cart,dispatch] = useReducer(cartReducer)
+  const [cart, dispatch] = useReducer(cartReducer)
 
   return (
     <>
