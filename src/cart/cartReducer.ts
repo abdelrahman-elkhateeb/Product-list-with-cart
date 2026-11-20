@@ -1,10 +1,6 @@
-import type { CartItem, Product } from "../types";
+import type { CartAction, CartItem } from "../types";
 
-export type CartAction =
-  | { type: "addItem"; product: Product }
-  | { type: "decreaseItem"; name: string }
-  | { type: "removeItem"; name: string }
-  | { type: "startNewOrder" };
+
 
 export function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
   switch (action.type) {

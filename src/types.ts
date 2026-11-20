@@ -14,3 +14,9 @@ export type CartItem = {
   product: Product;
   quantity: number;
 }
+
+export type CartAction =
+  | { type: "addItem"; product: Product }
+  | { type: "decreaseItem"; name: string }
+  | { type: "removeItem"; name: string }
+  | { type: "startNewOrder" };
