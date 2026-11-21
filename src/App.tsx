@@ -5,17 +5,17 @@ import { useCart } from './cart/CartContext';
 import ProductCard from './components/ProductCard';
 import Cart from './components/Cart';
 import OrderConfirmedModal from './components/OrderConfirmedModal';
+import { useState } from 'react';
 
 const products: Product[] = data;
 
 function App() {
   const { cart, dispatch } = useCart();
 
-  // TODO: derive these from `cart` (no new state!)
-  const totalQuantity = 0;
-  const orderTotal = 0;
+  const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const orderTotal = cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
 
-  const isOrderConfirmed = false;
+  const [isOrderConfirmed, setIsOrderConfirmed] = useState(false);
 
   return (
     <main className="mx-auto grid max-w-7xl gap-8 p-6 md:p-10 lg:grid-cols-[1fr_24rem] lg:p-20">
@@ -27,9 +27,9 @@ function App() {
             <ProductCard
               key={product.name}
               product={product}
-              quantity={()} // TODO: this product's quantity in the cart (0 if not in it)
-              onAdd={() => { dispatch({ type: "addItem", product: product }) }} // TODO: dispatch addItem
-              onDecrease={() => { dispatch({ type: "decreaseItem", name: product.name }) }} // TODO: dispatch decreaseItem
+              quantity={cart.find(item => item.product.name === product.name)?.quantity ?? 0}
+              onAdd={() => { dispatch({ type: "addItem", product: product }) }}
+              onDecrease={() => { dispatch({ type: "decreaseItem", name: product.name }) }}
             />
           ))}
         </div>
@@ -39,15 +39,18 @@ function App() {
         items={cart}
         totalQuantity={totalQuantity}
         orderTotal={orderTotal}
-        onRemove={() => {dispatch({type:"removeItem",})}} // TODO: dispatch removeItem
-        onConfirm={() => { }} // TODO: open the modal
+        onRemove={(name) => { dispatch({ type: "removeItem", name }) }}
+        onConfirm={() => { setIsOrderConfirmed(!isOrderConfirmed) }}
       />
 
       <OrderConfirmedModal
         isOpen={isOrderConfirmed}
         items={cart}
         orderTotal={orderTotal}
-        onStartNewOrder={() => { }} // TODO: dispatch startNewOrder + close the modal
+        onStartNewOrder={() => {
+          dispatch({ type: "startNewOrder" });
+          setIsOrderConfirmed(!isOrderConfirmed)
+        }}
       />
     </main>
   )
